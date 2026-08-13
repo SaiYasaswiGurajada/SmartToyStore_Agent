@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Toy Store — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f7;
+      --surface: #ffffff;
+      --teal: #0f4c4c;
+      --text: #1a1a1a;
+      --text-muted: #6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .notice {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      max-width: 500px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 24px;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .code-block {
+      background: #f3f4f6;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 13px;
+      text-align: left;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="notice">
+    <h1>Backend Required</h1>
+    <p>The admin dashboard connects to a local SQLite database for analytics, conversation histories, and escalation logs.</p>
+    <p>Because this version of the Smart Toy Store is hosted on GitHub Pages (which only supports static files), the admin dashboard is disabled.</p>
+    <div class="code-block">
+# To view the admin dashboard, run the app locally:
+pip install -r requirements.txt
+uvicorn app:app --reload
+# Then visit http://localhost:8000/admin
+    </div>
+  </div>
+</body>
+</html>
