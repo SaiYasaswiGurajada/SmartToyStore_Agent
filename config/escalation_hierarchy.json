@@ -1,0 +1,57 @@
+{
+  "model": "3-level",
+  "note": "Level 1 sends NO email. It is consoled and resolved in chat. Only Levels 2 and 3 route to a person.",
+  "hierarchy": [
+    {
+      "level": 1,
+      "label": "Bot Console",
+      "sends_email": false,
+      "env_var": null,
+      "handles": [
+        "General confusion or a how-do-I asked with frustration",
+        "Mild dissatisfaction with a product or its appearance",
+        "Hypothetical or preventive safety questions with no reported incident",
+        "Second-hand concern from reviews with no personal incident",
+        "Sarcasm or passive-aggressive tone with no explicit complaint"
+      ],
+      "behaviour": "Acknowledge once, then attempt real resolution from the knowledge base. Escalate to Level 2 only if resolution fails."
+    },
+    {
+      "level": 2,
+      "label": "Store Manager",
+      "sends_email": true,
+      "env_var": "EMAIL_MANAGER",
+      "default_email": "manager@smarttoystore.example",
+      "handles": [
+        "Repeated unresolved contact, three or more attempts",
+        "Product failed after purchase with no safety element",
+        "Explicit demand for a refund or replacement",
+        "Knowledge gaps the corpus does not cover",
+        "Custom bulk, corporate or school quotes",
+        "Anxious safety concern that documentation does not reassure"
+      ]
+    },
+    {
+      "level": 3,
+      "label": "CEO / Owner",
+      "sends_email": true,
+      "env_var": "EMAIL_OWNER",
+      "default_email": "owner@smarttoystore.example",
+      "handles": [
+        "Choking, swallowing or any injury",
+        "Electric shock, burns, fire, smoke, overheating, melting",
+        "Allergic reaction to materials",
+        "Legal or regulatory language including lawyer and consumer court",
+        "Any reported safety event regardless of tone or outcome"
+      ],
+      "floor_rule": "Safety and legal language sets a Level 3 floor regardless of tone, per KB 8.3 and system-guardrails 3",
+      "terminal_for_session": true,
+      "suppress_troubleshooting": true,
+      "suggested_reply_in_email": false,
+      "acknowledge": "immediately"
+    }
+  ],
+  "routing_rule": "final_level = max(model_assessed_level, safety_floor_level)",
+  "send_then_confirm": "Never tell the customer an escalation happened until the email send has succeeded. Retry 3 times with backoff, then record SEND_FAILED without claiming escalation.",
+  "deduplication": "One email per session per level. A follow-up is sent only when the level rises."
+}

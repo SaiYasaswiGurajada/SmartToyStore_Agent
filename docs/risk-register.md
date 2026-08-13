@@ -1,0 +1,22 @@
+# Risk Register
+
+Ordered by severity, assessed for a demonstration system.
+
+| # | Risk | Likelihood | Impact | Mitigation | Residual |
+|---|---|---|---|---|---|
+| 1 | **Missed safety event.** An injury or hazard routed below Level 3 | Low | Severe | Deterministic floor OR'd above the model; low confidence with safety vocabulary routes to 3; Level 3 terminal; 100% recall target | Novel phrasing with neither keyword nor recognisable context could slip. Reviewed after every suite run |
+| 2 | **Confirmed escalation that never sent.** Customer told a person was notified when the email failed | Medium | Severe | Send-then-confirm ordering; 3 retries with backoff; `SEND_FAILED` recorded without claiming escalation; SQL check that must return zero rows | Depends on the ordering never being "optimised" back to reply-first |
+| 3 | **False safety claim.** Bot names a certification or rating not in the documents | Medium if unguarded | High — liability, not inaccuracy | Certification names must appear verbatim in retrieved context; no inference from "compliant with applicable regulations"; unsafe-claim rate targeted at zero | Placeholder in §7.1 must be filled with real values first |
+| 4 | **Placeholder emitted as policy.** `[X days]` returned as a return window | High until filled | High | Index-time placeholder detection forcing UNSUPPORTED; `PLACEHOLDERS_TO_FILL.md` as a blocking checklist | Pricing and delivery escalate until filled, depressing containment |
+| 5 | **Child PII collected or stored.** Name, school, address from a child | Low | Severe | Never request PII; redaction before first write; account details routed to a parent; logged as a violation, never the value | Redaction regexes miss unusual formats. Free-text school names are the weakest case |
+| 6 | **Bot repurposed as a general chatbot for a child** | Medium | Medium | Scope guardrail declines stories, games, homework and chit-chat; drift limit of two off-topic turns; no copyrighted characters | Persistent reframing attempts are not exhaustively tested |
+| 7 | **Prompt injection.** Instructions in a message overriding escalation or grounding | Medium | Medium-High | All input treated as data; rules re-injected every turn; claimed prior conversations given equal scrutiny; adversarial cases in the suite | Multi-turn injection is not fully tested |
+| 8 | **Escalation logic disclosed.** Levels, addresses or thresholds revealed | Medium | Medium | KB §8 and §9 excluded from the index; never state level or recipient to the customer | A determined prober may infer level from tone differences |
+| 9 | **Over-escalation on tone.** Every frustrated customer routed to the manager | Medium | Medium | Level 1 must console *and* attempt resolution before escalating; false-escalation rate tracked | Level 1 quality is judgement-dependent |
+| 10 | **Escalation flooding.** Repeated messages generating one email each | Medium | Medium | Session escalation state; one email per level; rate limit on escalations per session per hour | Distinct new issues in one session may fold into an existing ticket |
+| 11 | **Gmail deliverability.** App-password SMTP lands in spam | Medium | Medium | Verify inbox placement before demo; send failures logged visibly, never silently; ticket table as fallback proof | A send failure now also blocks the customer confirmation, by design |
+| 12 | **Sarcasm read literally.** Negative sentiment in polite wording answered as praise | Medium | Low | Explicit case in the assessment skill and in the suite (TC-33) | Emoji-carried sarcasm is unreliable |
+| 13 | **Tunnel URL changes / sandbox dormancy** | High | Medium at demo time | Static ngrok domain pinned in Twilio; re-send join phrase the morning of the demo | Manual steps |
+| 14 | **Webhook signature bypass.** Fabricated messages including fake Level 3 reports | Low | High | `RequestValidator` against the exact public URL; 403 on failure | Wrong `PUBLIC_WEBHOOK_URL` fails closed, which is the safe direction |
+| 15 | **Answer formatting on a phone.** Long answers or tables unreadable | High if unhandled | Medium | 700-character target, no tables, at most three bullets | Troubleshooting sequences remain long |
+| 16 | **Corpus drift.** Policy changes without a corpus update | High in production | High | Version and date in the header; volatile sections flagged in the KB's own notes | Not solved. Needs an owner and a review cadence |

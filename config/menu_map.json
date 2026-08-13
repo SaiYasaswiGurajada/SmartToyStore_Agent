@@ -1,0 +1,71 @@
+{
+  "note": "Menu numbering is independent of knowledge base numbering. Menu 4.2 maps to KB 5.2. Keep this file in sync with KB section 9.",
+  "greeting_triggers": ["hi", "hello", "hey", "hii", "namaste", "hlo", "good morning", "good evening"],
+  "greeting_only_rule": "Show the menu ONLY when the message is a greeting and nothing else. 'Hi, my toy won't pair' is a question and is answered directly.",
+  "menu": [
+    {
+      "id": "1",
+      "label": "Connectivity & Setup",
+      "items": [
+        { "id": "1.1", "prompt": "Which frequency band do I connect to?", "kb": "1.1" },
+        { "id": "1.2", "prompt": "Bluetooth or Wi-Fi — which does my toy use?", "kb": "1.2" },
+        { "id": "1.3", "prompt": "How do I pair it for the first time?", "kb": "2.1" },
+        { "id": "1.4", "prompt": "Pairing isn't working — help", "kb": "2.2" },
+        { "id": "1.5", "prompt": "How do I factory reset it?", "kb": "2.4" }
+      ]
+    },
+    {
+      "id": "2",
+      "label": "Features & How It Works",
+      "items": [
+        { "id": "2.1", "prompt": "What can the toy do?", "kb": "3.1" },
+        { "id": "2.2", "prompt": "What does the app do?", "kb": "3.2" },
+        { "id": "2.3", "prompt": "What age is it for?", "kb": "3.4" },
+        { "id": "2.4", "prompt": "What data does it collect?", "kb": "3.5" },
+        { "id": "2.5", "prompt": "What parental controls are there?", "kb": "3.6" }
+      ]
+    },
+    {
+      "id": "3",
+      "label": "Battery & Maintenance",
+      "items": [
+        { "id": "3.1", "prompt": "Batteries or rechargeable?", "kb": "4.1" },
+        { "id": "3.2", "prompt": "How long does the battery last?", "kb": "4.2" },
+        { "id": "3.3", "prompt": "How do I clean it?", "kb": "4.3" }
+      ]
+    },
+    {
+      "id": "4",
+      "label": "Pricing & Discounts",
+      "items": [
+        { "id": "4.1", "prompt": "What does it cost?", "kb": "5.1" },
+        { "id": "4.2", "prompt": "Any offers or bundles right now?", "kb": "5.2" },
+        { "id": "4.3", "prompt": "Discounts for schools or bulk orders?", "kb": "5.3" },
+        { "id": "4.4", "prompt": "Do you match prices?", "kb": "5.5" }
+      ]
+    },
+    {
+      "id": "5",
+      "label": "Orders, Delivery, Warranty & Safety",
+      "items": [
+        { "id": "5.1", "prompt": "How long is delivery?", "kb": "6.1" },
+        { "id": "5.2", "prompt": "What does the warranty cover?", "kb": "6.2" },
+        { "id": "5.3", "prompt": "How do returns work?", "kb": "6.3" },
+        { "id": "5.4", "prompt": "How do I track my order?", "kb": "6.5" },
+        { "id": "5.5", "prompt": "Is it certified safe for children?", "kb": "7.1" },
+        { "id": "5.6", "prompt": "Choking hazards and age warnings", "kb": "7.2" }
+      ]
+    }
+  ],
+  "invalid_input": {
+    "out_of_range": "Reshow the current menu once, briefly, without scolding.",
+    "free_text_while_menu_open": "Treat as a question. Answer it and drop the menu.",
+    "two_consecutive_invalid": "Drop the menu and ask in plain words what they need."
+  },
+  "state_rules": {
+    "store_position_on_session": true,
+    "clear_on_free_text_answer": true,
+    "clear_on_escalation": true,
+    "reason": "Stale menu state causes a later bare number to be misread as a menu choice."
+  }
+}

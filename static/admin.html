@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Toy Store — Admin Panel</title>
+  <meta name="description" content="Operator dashboard for Smart Toy Store Support Assistant. View tickets, knowledge gaps, guardrail violations, and metrics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2128;
+      --border: #30363d;
+      --teal: #0f4c4c;
+      --teal-bright: #26a69a;
+      --amber: #e6a817;
+      --amber-faint: rgba(230,168,23,0.1);
+      --red: #f85149;
+      --red-faint: rgba(248,81,73,0.1);
+      --green: #3fb950;
+      --green-faint: rgba(63,185,80,0.1);
+      --blue: #58a6ff;
+      --blue-faint: rgba(88,166,255,0.1);
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ---- Header ---- */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 12px; }
+
+    .header-logo {
+      width: 32px; height: 32px;
+      background: var(--teal);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    h1 { font-size: 16px; font-weight: 600; }
+    .badge-admin {
+      background: var(--amber-faint);
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+    }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--sans);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover { border-color: var(--teal-bright); color: var(--teal-bright); }
+
+    .btn-primary {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #1a6b6b; border-color: #1a6b6b; color: #fff; }
+
+    /* ---- Layout ---- */
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ---- Metrics row ---- */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .metric-card:hover { border-color: var(--teal-bright); }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--teal-bright);
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ---- Section ---- */
+    .section { margin-bottom: 36px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .count-badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 11px;
+      padding: 2px 8px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+    }
+
+    /* ---- Table ---- */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: var(--surface2);
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    td {
+      padding: 10px 16px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    /* ---- Status chips ---- */
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--mono);
+    }
+
+    .chip-sent { background: var(--green-faint); color: var(--green); }
+    .chip-failed { background: var(--red-faint); color: var(--red); }
+    .chip-pending { background: var(--amber-faint); color: var(--amber); }
+    .chip-l2 { background: var(--amber-faint); color: var(--amber); }
+    .chip-l3 { background: var(--red-faint); color: var(--red); }
+    .chip-informed { background: var(--green-faint); color: var(--green); }
+    .chip-not-informed { background: var(--red-faint); color: var(--red); }
+
+    /* ---- Gap clusters ---- */
+    .gap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .gap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .gap-cluster {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .gap-bar-wrap {
+      background: var(--surface2);
+      border-radius: 4px;
+      height: 6px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .gap-bar {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .gap-stats {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ---- Violation types ---- */
+    .violation-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .violation-row:last-child { border-bottom: none; }
+
+    .violation-type {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--red);
+      min-width: 200px;
+    }
+
+    .violation-count {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 60px;
+    }
+
+    .violation-last {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ---- Loading ---- */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--teal-bright);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---- Truncate ---- */
+    .truncate {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ---- Action dist ---- */
+    .action-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .action-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      min-width: 120px;
+    }
+
+    .action-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .action-count {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--teal-bright);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="header-logo">🧸</div>
+    <h1>Smart Toy Store</h1>
+    <span class="badge-admin">ADMIN</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="loadAll()">↻ Refresh</button>
+    <a href="/" class="btn btn-primary">← Back to Chat</a>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- Metrics -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📊 Metrics</div>
+    </div>
+    <div class="metrics-grid" id="metricsGrid">
+      <div class="loading">Loading</div>
+    </div>
+    <div id="actionDist" class="action-grid" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- Ticket Queue -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">
+        🎫 Escalation Tickets
+        <span class="count-badge" id="ticketCount">0</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Level</th>
+            <th>Trigger</th>
+            <th>Reason</th>
+            <th>Send Status</th>
+            <th>Retries</th>
+            <th>Informed</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="ticketBody">
+          <tr><td colspan="8" class="loading">Loading</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Knowledge Gaps -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🔍 Content Gap Report</div>
+    </div>
+    <div id="gapClusters" class="gap-grid">
+      <div class="loading">Loading</div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="section-header">
+        <div class="section-title">
+          ⚠ Placeholder-Blocked Queries
+          <span class="count-badge" id="placeholderCount">0</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Query</th><th>Nearest Chunk</th><th>Time</th></tr>
+          </thead>
+          <tbody id="placeholderBody">
+            <tr><td colspan="3" class="loading">Loading</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guardrail Violations -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🛡 Guardrail Violations</div>
+    </div>
+    <div class="table-wrap">
+      <div id="violationList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  async function loadAll() {
+    await Promise.all([loadMetrics(), loadTickets(), loadGaps(), loadViolations()]);
+  }
+
+  // ---- Metrics ----
+  async function loadMetrics() {
+    const grid = document.getElementById('metricsGrid');
+    const distEl = document.getElementById('actionDist');
+    try {
+      const data = await fetchJson('/api/admin/metrics');
+      grid.innerHTML = `
+        <div class="metric-card">
+          <div class="metric-label">Total Messages</div>
+          <div class="metric-value">${data.total_messages}</div>
+          <div class="metric-sub">customer messages processed</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Containment Rate</div>
+          <div class="metric-value">${data.containment_rate}%</div>
+          <div class="metric-sub">resolved without escalation</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Escalation Rate</div>
+          <div class="metric-value">${data.escalation_rate}%</div>
+          <div class="metric-sub">routed to a human</div>
+        </div>
+      `;
+      distEl.innerHTML = (data.action_distribution || []).map(a => `
+        <div class="action-chip">
+          <div class="action-name">${a.action_taken}</div>
+          <div class="action-count">${a.cnt}</div>
+        </div>
+      `).join('');
+    } catch(e) {
+      grid.innerHTML = '<div class="loading">Failed to load</div>';
+    }
+  }
+
+  // ---- Tickets ----
+  async function loadTickets() {
+    const tbody = document.getElementById('ticketBody');
+    try {
+      const data = await fetchJson('/api/admin/tickets');
+      document.getElementById('ticketCount').textContent = data.length;
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:24px;font-family:var(--mono);font-size:12px;">No tickets yet</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(t => `
+        <tr>
+          <td>#${String(t.ticket_id).padStart(4,'0')}</td>
+          <td><span class="chip chip-l${t.level}">L${t.level}</span></td>
+          <td>${esc(t.trigger_type)}</td>
+          <td class="truncate">${esc(t.reason_summary)}</td>
+          <td><span class="chip chip-${t.send_status.toLowerCase()}">${t.send_status}</span></td>
+          <td>${t.send_attempts}</td>
+          <td><span class="chip ${t.customer_informed ? 'chip-informed' : 'chip-not-informed'}">${t.customer_informed ? 'YES' : 'NO'}</span></td>
+          <td>${formatDate(t.created_at)}</td>
+        </tr>
+      `).join('');
+    } catch(e) {
+      tbody.innerHTML = '<tr><td colspan="8">Error loading tickets</td></tr>';
+    }
+  }
+
+  // ---- Knowledge Gaps ----
+  async function loadGaps() {
+    const gapEl = document.getElementById('gapClusters');
+    const placeholderBody = document.getElementById('placeholderBody');
+    try {
+      const data = await fetchJson('/api/admin/gaps');
+      const clusters = data.top_clusters || [];
+      const maxHits = clusters.length ? Math.max(...clusters.map(c => c.hits)) : 1;
+
+      document.getElementById('placeholderCount').textContent = (data.placeholder_blocked || []).length;
+
+      if (!clusters.length) {
+        gapEl.innerHTML = '<div style="color:var(--text-muted);font-family:var(--mono);font-size:12px;padding:16px;">No gaps recorded yet.</div>';
+      } else {
+        gapEl.innerHTML = clusters.map(c => `
+          <div class="gap-card">
+            <div class="gap-cluster">${esc(c.topic_cluster)}</div>
+            <div class="gap-bar-wrap">
+              <div class="gap-bar" style="width:${Math.round(c.hits/maxHits*100)}%"></div>
+            </div>
+            <div class="gap-stats">
+              <span>${c.hits} queries</span>
+              <span>avg score ${c.avg_score ? c.avg_score.toFixed(2) : 'n/a'}</span>
+              ${c.placeholder_hits > 0 ? `<span style="color:var(--amber)">⚠ ${c.placeholder_hits} placeholder</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const pRows = data.placeholder_blocked || [];
+      if (!pRows.length) {
+        placeholderBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:20px;font-family:var(--mono);font-size:12px;">None — good!</td></tr>';
+      } else {
+        placeholderBody.innerHTML = pRows.map(p => `
+          <tr>
+            <td class="truncate">${esc(p.unanswered_query)}</td>
+            <td>${esc(p.nearest_chunk)}</td>
+            <td>${formatDate(p.timestamp)}</td>
+          </tr>
+        `).join('');
+      }
+    } catch(e) {
+      gapEl.innerHTML = '<div class="loading">Error loading gaps</div>';
+    }
+  }
+
+  // ---- Violations ----
+  async function loadViolations() {
+    const listEl = document.getElementById('violationList');
+    try {
+      const data = await fetchJson('/api/admin/violations');
+      if (!data.length) {
+        listEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-family:var(--mono);font-size:12px;">No violations recorded.</div>';
+        return;
+      }
+      listEl.innerHTML = data.map(v => `
+        <div class="violation-row">
+          <div class="violation-count">${v.count}</div>
+          <div class="violation-type">${esc(v.violation_type)}</div>
+          <div class="violation-last">last: ${formatDate(v.last_seen)}</div>
+        </div>
+      `).join('');
+    } catch(e) {
+      listEl.innerHTML = '<div class="loading">Error</div>';
+    }
+  }
+
+  // ---- Helpers ----
+  async function fetchJson(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(str) {
+    if (!str) return '—';
+    try {
+      const d = new Date(str);
+      return d.toLocaleString('en-IN', {dateStyle:'short', timeStyle:'short'});
+    } catch { return str; }
+  }
+
+  // ---- Init ----
+  loadAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+SMART TOY STORE - QUICK FAQ
+Companion to the main knowledge base. Plain text format, so all three
+parsers (.md, .txt, .docx or .pdf) get exercised on upload.
+
+Only questions answerable from non-placeholder KB content appear here.
+Add pricing, delivery and warranty entries once PLACEHOLDERS_TO_FILL.md
+is worked through.
+
+--------------------------------------------------------------------
+CONNECTIVITY
+--------------------------------------------------------------------
+
+Q: Does the toy work on 5GHz Wi-Fi?
+A: No. Our smart toys connect over 2.4GHz Wi-Fi only. If your router
+   broadcasts both bands under one network name, you may need to split
+   them temporarily or select 2.4GHz manually during pairing.
+
+Q: Is it Bluetooth or Wi-Fi?
+A: Most toys use Bluetooth Low Energy for pairing and app control. Some
+   models with live-streaming or cloud voice features also need 2.4GHz
+   Wi-Fi. Basic play usually works over Bluetooth alone.
+
+Q: How far does it work from my phone?
+A: About 10 metres indoors in open space. Walls and other electronics
+   reduce that.
+
+Q: Can I connect more than one toy?
+A: Yes. Each toy appears separately in the app and can be controlled on
+   its own or as part of a group activity on models that support it.
+
+Q: Does it work without internet?
+A: Core play features work offline once pairing is complete. Voice
+   assistant, cloud story libraries and remote monitoring need internet.
+
+Q: Which phones are supported?
+A: iOS 13 and above, Android 8.0 and above.
+
+--------------------------------------------------------------------
+SETUP
+--------------------------------------------------------------------
+
+Q: How do I pair the toy for the first time?
+A: Download the companion app, power the toy on and hold the power
+   button until the LED blinks, open the app, choose Add New Device,
+   pick your model, and follow the prompts.
+
+Q: Pairing keeps failing. What should I try?
+A: In order: check the toy is charged and in pairing mode; check your
+   phone's Bluetooth is on and not already paired elsewhere; bring the
+   toy within 1 to 2 metres; restart both toy and app; confirm you are
+   on 2.4GHz not 5GHz; and as a last step factory reset and retry.
+
+Q: How do I factory reset?
+A: Hold power and pairing together for 10 seconds until the LED flashes
+   three times, or use Remove Device then Factory Reset in the app. This
+   erases saved Wi-Fi credentials and app preferences.
+
+Q: Do I need the app?
+A: Most features need it for initial setup, though many toys work
+   standalone for basic play afterward. Some entry-level toys need no
+   app at all.
+
+--------------------------------------------------------------------
+FEATURES AND PARENTAL CONTROLS
+--------------------------------------------------------------------
+
+Q: What can the app do?
+A: Pair and manage toys, choose play modes, access story and game
+   libraries, set usage and screen-time limits, and on supported models
+   review voice interaction logs.
+
+Q: What parental controls are there?
+A: Play time limits, content filtering by age, purchase and in-app
+   content restrictions, and the ability to review or delete voice
+   interaction history.
+
+Q: Does the toy record my child's voice?
+A: Toys with voice or app connectivity may collect voice recordings for
+   command processing, usage patterns and device diagnostics. We do not
+   sell this data. Parents can request deletion through the app's
+   account settings or by contacting support.
+
+Q: Does my child need supervision?
+A: It varies by age rating and toy type. Toys for children under 5
+   generally recommend adult supervision during setup and early use.
+   Voice-enabled toys recommend periodic parental review of logs.
+
+--------------------------------------------------------------------
+BATTERY AND CARE
+--------------------------------------------------------------------
+
+Q: How long does the battery last?
+A: Rechargeable toys give roughly 4 to 8 hours of active play per
+   charge, less with continuous voice or Wi-Fi use. A full charge takes
+   about 2 hours.
+
+Q: How do I clean it?
+A: Wipe the exterior with a soft, slightly damp cloth. Never submerge
+   electronic parts. Keep out of direct sunlight and high heat. Spot
+   clean fabric-covered toys unless the manual says machine washable.
+
+--------------------------------------------------------------------
+SAFETY
+--------------------------------------------------------------------
+
+Q: Are the toys safe for young children?
+A: Toys with small parts carry choking hazard warnings and are not
+   recommended under 3 unless stated otherwise. Every toy has a
+   recommended age range printed on the packaging and on the product
+   page.
+
+Q: What are the toys made of?
+A: Non-toxic, BPA-free plastics with lead-free paints and coatings,
+   compliant with applicable child safety material regulations.
+
+Q: Something happened - the toy overheated, sparked, or my child was
+   hurt. What do I do?
+A: Stop using the toy immediately and unplug it if charging. Tell us
+   right away. Reports like this go straight to our owner as top
+   priority and are never handled by automated replies.

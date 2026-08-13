@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Toy Store — Support Chat</title>
+  <meta name="description" content="24/7 AI support for Smart Toy Store — get help with setup, connectivity, battery, orders and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #faf9f7;
+      --surface: #ffffff;
+      --teal: #0f4c4c;
+      --teal-light: #1a6b6b;
+      --teal-faint: #e8f4f4;
+      --amber: #b45309;
+      --amber-light: #fef3c7;
+      --text: #1a1a1a;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --customer-bg: #f3f4f6;
+      --assistant-bg: #0f4c4c;
+      --system-bg: #fef3c7;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    header {
+      background: var(--teal);
+      color: #fff;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .header-sub {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 1px;
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ---- Layout ---- */
+    .chat-container {
+      flex: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ---- Messages ---- */
+    #messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 300px;
+      padding-bottom: 16px;
+    }
+
+    .msg-row {
+      display: flex;
+      gap: 10px;
+      animation: slideIn 0.2s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.customer { flex-direction: row-reverse; }
+
+    .badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .badge-assistant {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    .badge-customer {
+      background: var(--customer-bg);
+      color: var(--teal);
+      border: 1px solid var(--border);
+    }
+
+    .bubble {
+      max-width: 72%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .bubble-assistant {
+      background: var(--assistant-bg);
+      color: #fff;
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .bubble-customer {
+      background: var(--customer-bg);
+      color: var(--text);
+      border-bottom-right-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .bubble-system {
+      background: var(--system-bg);
+      color: var(--amber);
+      border: 1px solid #fcd34d;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      max-width: 100%;
+      padding: 10px 14px;
+    }
+
+    .system-row {
+      justify-content: center;
+    }
+
+    /* ---- Menu Options ---- */
+    .options-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .option-btn {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius-sm);
+      padding: 6px 14px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-1px);
+    }
+
+    .option-btn:active { transform: translateY(0); }
+
+    /* ---- Typing indicator ---- */
+    .typing-row { display: flex; gap: 10px; align-items: flex-end; }
+
+    .typing-bubble {
+      background: var(--assistant-bg);
+      border-radius: var(--radius);
+      border-bottom-left-radius: 4px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .typing-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      animation: bounce 1.2s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ---- Input area ---- */
+    .input-area {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      position: sticky;
+      bottom: 16px;
+      margin-top: 8px;
+    }
+
+    #userInput {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: none;
+      max-height: 120px;
+      background: transparent;
+      color: var(--text);
+    }
+
+    #userInput::placeholder { color: var(--text-muted); }
+
+    #sendBtn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    #sendBtn:hover { background: var(--teal-light); transform: scale(1.05); }
+    #sendBtn:active { transform: scale(0.97); }
+    #sendBtn:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+
+    #sendBtn svg { width: 17px; height: 17px; fill: #fff; }
+
+    /* ---- Upload ---- */
+    .upload-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--teal-faint);
+      border: 1px dashed var(--teal);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .upload-bar:hover { background: #d4ebeb; }
+
+    .upload-bar label {
+      font-size: 13px;
+      color: var(--teal);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    #uploadInput { display: none; }
+
+    #uploadStatus {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ---- Ticket ref ---- */
+    .ticket-ref {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    /* ---- Welcome card ---- */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome-card h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .welcome-card p {
+      font-size: 13px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 480px) {
+      .bubble { max-width: 88%; }
+      header { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-logo">🧸</div>
+    <div>
+      <div class="header-title">Smart Toy Store</div>
+      <div class="header-sub">Support Assistant</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div class="status-dot"></div>
+    <span>Online 24/7</span>
+  </div>
+</header>
+
+<div class="chat-container">
+
+  <!-- Upload bar -->
+  <div class="upload-bar" onclick="document.getElementById('uploadInput').click()">
+    <svg width="16" height="16" fill="none" stroke="#0f4c4c" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+    </svg>
+    <label for="uploadInput">Upload a document (PDF, DOCX, TXT, MD)</label>
+    <input type="file" id="uploadInput" accept=".pdf,.docx,.txt,.md" onchange="uploadFile(this)" />
+    <span id="uploadStatus"></span>
+  </div>
+
+  <!-- Messages -->
+  <div id="messages"></div>
+
+  <!-- Input -->
+  <div class="input-area">
+    <textarea
+      id="userInput"
+      rows="1"
+      placeholder="Type your question here…"
+      aria-label="Chat message"
+      onkeydown="handleKey(event)"
+      oninput="autoResize(this)"
+    ></textarea>
+    <button id="sendBtn" onclick="sendMessage()" aria-label="Send message" title="Send">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const SESSION_KEY = 'sts_session_id';
+  let sessionId = sessionStorage.getItem(SESSION_KEY) || null;
+
+  function getOrCreateSession() {
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+      sessionStorage.setItem(SESSION_KEY, sessionId);
+    }
+    return sessionId;
+  }
+
+  // ---- Welcome message ----
+  window.addEventListener('DOMContentLoaded', () => {
+    addAssistantMessage(
+      "Hello! 👋 I'm here to help with anything about your smart toy.\n" +
+      "Choose a topic to get started, or just type your question anytime:\n\n" +
+      "1. Connectivity & Setup\n" +
+      "2. Features & How It Works\n" +
+      "3. Battery & Maintenance\n" +
+      "4. Pricing & Discounts\n" +
+      "5. Orders, Delivery, Warranty & Safety",
+      [
+        {id:"1", label:"Connectivity & Setup"},
+        {id:"2", label:"Features & How It Works"},
+        {id:"3", label:"Battery & Maintenance"},
+        {id:"4", label:"Pricing & Discounts"},
+        {id:"5", label:"Orders, Delivery, Warranty & Safety"},
+      ]
+    );
+  });
+
+  // ---- Auto-resize textarea ----
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  // ---- Key handler ----
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // ---- Send message ----
+  async function sendMessage(overrideText) {
+    const input = document.getElementById('userInput');
+    const text = (overrideText ?? input.value).trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    setInputEnabled(false);
+
+    addCustomerMessage(text);
+    const typingId = addTypingIndicator();
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: text,
+          session_id: getOrCreateSession(),
+        }),
+      });
+      const data = await res.json();
+      sessionId = data.session_id;
+      sessionStorage.setItem(SESSION_KEY, sessionId);
+
+      removeTypingIndicator(typingId);
+
+      if (data.action === 'SAFETY_HANDOFF' || data.action === 'ESCALATE') {
+        addSystemMessage(data.reply, data.ticket_id);
+      } else {
+        addAssistantMessage(data.reply, data.options);
+      }
+    } catch (err) {
+      removeTypingIndicator(typingId);
+      addSystemMessage('Connection error. Please try again.');
+    }
+
+    setInputEnabled(true);
+    document.getElementById('userInput').focus();
+    scrollToBottom();
+  }
+
+  function setInputEnabled(enabled) {
+    document.getElementById('userInput').disabled = !enabled;
+    document.getElementById('sendBtn').disabled = !enabled;
+  }
+
+  // ---- Option button click ----
+  function selectOption(value) {
+    sendMessage(value);
+  }
+
+  // ---- Message renderers ----
+  function addAssistantMessage(text, options) {
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
+      <div class="badge badge-assistant" aria-label="Assistant">STS</div>
+      <div>
+        <div class="bubble bubble-assistant">${escHtml(text)}</div>
+        ${options && options.length ? renderOptions(options) : ''}
+      </div>
+    `;
+    document.getElementById('messages').appendChild(row);
+    scrollToBottom();
+  }
+
+  function addCustomerMessage(text) {
+    const row = document.createElement('div');
+    row.className = 'msg-row customer';
+    row.innerHTML = `
+      <div class="badge badge-customer" aria-label="You">YOU</div>
+      <div class="bubble bubble-customer">${escHtml(text)}</div>
+    `;
+    document.getElementById('messages').appendChild(row);
+  }
+
+  function addSystemMessage(text, ticketId) {
+    const row = document.createElement('div');
+    row.className = 'msg-row system-row';
+    const ref = ticketId ? `<div class="ticket-ref">Ref: STS-${String(ticketId).padStart(4,'0')}</div>` : '';
+    row.innerHTML = `
+      <div>
+        <div class="bubble bubble-system">⚠ ${escHtml(text)}</div>
+        ${ref}
+      </div>
+    `;
+    document.getElementById('messages').appendChild(row);
+    scrollToBottom();
+  }
+
+  function renderOptions(options) {
+    const btns = options.map(o =>
+      `<button class="option-btn" id="opt-${o.id}" onclick="selectOption('${escAttr(o.id)}')">${escHtml(o.label)}</button>`
+    ).join('');
+    return `<div class="options-grid">${btns}</div>`;
+  }
+
+  // ---- Typing indicator ----
+  let _typingCounter = 0;
+  function addTypingIndicator() {
+    const id = 'typing-' + (++_typingCounter);
+    const row = document.createElement('div');
+    row.className = 'msg-row typing-row';
+    row.id = id;
+    row.innerHTML = `
+      <div class="badge badge-assistant">STS</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    `;
+    document.getElementById('messages').appendChild(row);
+    scrollToBottom();
+    return id;
+  }
+
+  function removeTypingIndicator(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  // ---- Upload ----
+  async function uploadFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('uploadStatus');
+    status.textContent = `Uploading ${file.name}…`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/upload', {method: 'POST', body: formData});
+      const data = await res.json();
+      if (res.ok) {
+        status.textContent = data.message;
+        status.style.color = '#0f4c4c';
+      } else {
+        status.textContent = '✗ ' + (data.detail || 'Upload failed');
+        status.style.color = '#b45309';
+      }
+    } catch (e) {
+      status.textContent = '✗ Upload error';
+      status.style.color = '#b45309';
+    }
+    input.value = '';
+  }
+
+  // ---- Utilities ----
+  function scrollToBottom() {
+    window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '<br>');
+  }
+
+  function escAttr(str) {
+    return String(str).replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
