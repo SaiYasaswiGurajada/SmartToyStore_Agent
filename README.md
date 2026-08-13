@@ -1,4 +1,4 @@
-# Smart Toy Store Support Assistant — Agent Bundle
+# Smart Toy Store Support Assistant — Agent Bundle (Agent creation project at BITSoM)
 
 A 24/7 AI support agent for a B2C smart toy retailer. Answers strictly from the knowledge base, consoles and resolves low-level frustration without escalating, and routes safety, legal and repeated-failure cases to a person by email.
 
