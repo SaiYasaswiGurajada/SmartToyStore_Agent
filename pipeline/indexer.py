@@ -6,7 +6,6 @@ other documents. KB sections 8 and 9 are NEVER indexed (they are behaviour specs
 """
 
 from __future__ import annotations
-from typing import Optional
 import re
 import io
 from pathlib import Path
@@ -52,7 +51,7 @@ def _flag_placeholders(chunks: list[Chunk]) -> list[Chunk]:
 # KB chunker — subsection level
 # --------------------------------------------------------------------------
 
-def _get_section_number(text_before: str) -> Optional[int]:
+def _get_section_number(text_before: str) -> int | None:
     """Return the section number of the most recent ## N. header."""
     matches = list(_SECTION_HEADER_RE.finditer(text_before))
     if not matches:
@@ -142,6 +141,7 @@ def parse_md(path: Path) -> list[Chunk]:
 
 def parse_pdf(path: Path) -> list[Chunk]:
     try:
+        # pyrefly: ignore [missing-import]
         import fitz  # PyMuPDF
         doc = fitz.open(str(path))
         pages_text = [page.get_text() for page in doc]
@@ -153,6 +153,7 @@ def parse_pdf(path: Path) -> list[Chunk]:
 
 def parse_docx(path: Path) -> list[Chunk]:
     try:
+        # pyrefly: ignore [missing-import]
         from docx import Document
         doc = Document(str(path))
         full_text = "\n\n".join(p.text for p in doc.paragraphs if p.text.strip())
